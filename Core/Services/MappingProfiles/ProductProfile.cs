@@ -17,7 +17,9 @@ namespace Services.MappingProfiles
                 .ForMember(p => p.BrandName, options => options.
                 MapFrom(s => s.Brand.Name))
                 .ForMember(p => p.TypeName, options => options.
-                MapFrom(s => s.Type.Name));
+                MapFrom(s => s.Type.Name))
+                .ForMember(p => p.PictureUrl, options => options.
+                MapFrom<PictureURLResolver>());
 
             CreateMap<ProductBrand, ProductBrandDTO>();
             CreateMap<ProductType, ProductTypeDTO>();

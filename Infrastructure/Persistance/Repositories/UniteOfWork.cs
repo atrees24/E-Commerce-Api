@@ -14,10 +14,10 @@ namespace Persistance.Repositories
         private readonly StoreContext _storeContext;
         private readonly ConcurrentDictionary<string, object> _repositories;
 
-        public UniteOfWork(StoreContext storeContext, ConcurrentDictionary<string, object> repositories)
+        public UniteOfWork(StoreContext storeContext)
         {
             _storeContext = storeContext;
-            _repositories = repositories;
+            _repositories = new();
         }
 
         public async Task<int> SaveChangesAsync() => await _storeContext.SaveChangesAsync();

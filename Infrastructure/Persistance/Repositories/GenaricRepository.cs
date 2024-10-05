@@ -30,8 +30,17 @@ namespace Persistance.Repositories
 
         }
 
+        public async Task<IEnumerable<TEntity>> GetAllAsync(Specifications<TEntity> specifications)
+         => await ApplySoecification(specifications).ToListAsync();
+
         public async Task<TEntity?> GetAsync(Tkey id) => await _storeContext.Set<TEntity>().FindAsync(id);
 
+        public async Task<TEntity?> GetAsync(Specifications<TEntity> specifications)
+         => await ApplySoecification(specifications).FirstOrDefaultAsync();
+
         public void Update(TEntity entity) => _storeContext.Set<TEntity>().Update(entity);
+
+        private IQueryable<TEntity> ApplySoecification(Specifications<TEntity> specifications)
+         => SpecificationsEvaloter.GetQuery(_storeContext.Set<TEntity>(), specifications);
     }
 }

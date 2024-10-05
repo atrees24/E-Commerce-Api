@@ -2,6 +2,7 @@
 using Domain.Interfaces;
 using Domain.Models;
 using Service.Abstraction;
+using Services.Spcefications;
 using Shared;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,10 @@ namespace Services
             return brandResult;
         }
 
-        public async Task<IEnumerable<ProductResultDTO>> GetAllProductsAsync()
+        public async Task<IEnumerable<ProductResultDTO>> GetAllProductsAsync(string? sort, int? brandId, int? typeId)
         {
-            var products = await UniteOfWork.GetRepository<Product,int>().GetAllAsync();
+            var products = await UniteOfWork.GetRepository<Product,int>()
+                .GetAllAsync(new ProductWithBrandAndTypeSpcefications(sort, brandId, typeId));
 
             var productResult = Mapper.Map<IEnumerable<ProductResultDTO>>(products);
 
@@ -42,7 +44,8 @@ namespace Services
 
         public async Task<ProductResultDTO?> GetProductByIdAsync(int id)
         {
-            var product = await UniteOfWork.GetRepository<Product,int>().GetAsync(id);
+            var product = await UniteOfWork.GetRepository<Product,int>()
+                .GetAsync(new ProductWithBrandAndTypeSpcefications(id));
 
             var productResult = Mapper.Map<ProductResultDTO>(product);
 
