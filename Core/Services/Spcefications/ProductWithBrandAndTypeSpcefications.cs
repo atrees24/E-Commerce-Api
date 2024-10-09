@@ -1,5 +1,6 @@
 ﻿using Domain.Interfaces;
 using Domain.Models;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,29 +19,35 @@ namespace Services.Spcefications
         }
 
 
-        public ProductWithBrandAndTypeSpcefications(string? sort,int? brandId,int? typeId) :
+        public ProductWithBrandAndTypeSpcefications(ProductSpceficationParamters paramters) :
            base(product => 
-           (!brandId.HasValue || product.BrandId == brandId) &&
-           (!typeId.HasValue || product.TypeId == typeId))
+           (!paramters.Brandid.HasValue || product.BrandId == paramters.Brandid) &&
+           (!paramters.Typeid.HasValue || product.TypeId == paramters.Typeid) &&
+           (string.IsNullOrWhiteSpace(paramters.search) || product.Name.ToLower().Contains(paramters.search.ToLower().Trim())))
         {
             AddInclude(product => product.Brand);
             AddInclude(product => product.Type);
 
-            if (!string.IsNullOrWhiteSpace(sort))
+
+            ApplyPagination(paramters.PageIndex, paramters.PageSize);
+
+            if (paramters.sort is not null)
             {
-                switch (sort.ToLower().Trim())
+                switch (paramters.sort)
                 {
-                    case "pricedesc":
+                    case ProductSortingOptions.PriceDesc:
                         SetOrderByDescinding(p=>p.Price);
                         break;
-                    case "priceasc":
+                    case ProductSortingOptions.PriceAsc:
                         SetOrderBy(p => p.Price);
                         break;
-                    case "namedecs":
+                    case ProductSortingOptions.NameDesc:
                         SetOrderByDescinding(p => p.Name);
                         break;
-                    default :
+                    case ProductSortingOptions.NameAsc:
                         SetOrderBy(p => p.Name);
+                        break;
+                    default:
                         break;
                 }
             }

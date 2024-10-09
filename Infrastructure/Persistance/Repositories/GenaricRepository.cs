@@ -20,6 +20,9 @@ namespace Persistance.Repositories
 
         public async Task AddAsync(TEntity entity) => await _storeContext.Set<TEntity>().AddAsync(entity);
 
+        public async Task<int> CountAsync(Specifications<TEntity> specifications)
+         => await ApplySoecification(specifications).CountAsync();
+
         public void Delete(TEntity entity) => _storeContext.Set<TEntity>().Remove(entity);
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(bool trackChanges = false)

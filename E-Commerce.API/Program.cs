@@ -1,4 +1,5 @@
 using Domain.Interfaces;
+using E_Commerce.API.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 using Persistance.Data;
@@ -34,6 +35,8 @@ namespace E_Commerce.API
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            app.UseMiddleware<GlobalErrorHandelingMiddelware>();
             await InitilaizeDB(app);
 
             // Configure the HTTP request pipeline.

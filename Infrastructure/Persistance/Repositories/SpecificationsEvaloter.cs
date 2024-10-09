@@ -23,6 +23,10 @@ namespace Persistance.Repositories
             else if (specifications.OrderByDecinding is not null)
                 Query = Query.OrderByDescending(specifications.OrderByDecinding);
 
+
+            if (specifications.IsPaginated)
+              Query = Query.Skip(specifications.skip).Take(specifications.take);
+
                 return Query;
         }
     }

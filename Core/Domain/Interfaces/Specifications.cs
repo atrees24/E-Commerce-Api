@@ -20,15 +20,26 @@ namespace Domain.Interfaces
             Criteria = criteria;
         }
 
-        public void AddInclude(Expression<Func<T, object>> includeExpression)
+        protected void AddInclude(Expression<Func<T, object>> includeExpression)
         {
             Includes.Add(includeExpression);
         }
 
-        public void SetOrderBy(Expression<Func<T, object>> Expression)
+        protected void SetOrderBy(Expression<Func<T, object>> Expression)
             => OrderBy = Expression;
-        public void SetOrderByDescinding(Expression<Func<T, object>> Expression)
+        protected void SetOrderByDescinding(Expression<Func<T, object>> Expression)
            => OrderByDecinding = Expression;
+
+        public int skip { get; private set; }
+        public int take { get; private set; }
+        public bool IsPaginated { get; private set; }
+
+        protected void ApplyPagination(int pageIndex , int pageSize)
+        {
+            IsPaginated = true;
+            take = pageSize;
+            skip = (pageIndex - 1) * pageSize;
+        }
 
     }
 }
