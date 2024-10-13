@@ -1,4 +1,5 @@
 ﻿using Domain.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Shared.ErrorModels;
 using System.Net;
 
@@ -21,6 +22,8 @@ namespace E_Commerce.API.Middlewares
             try
             {
                 await _next(httpContext);
+                if (httpContext.Response.StatusCode == (int)HttpStatusCode.NotFound)
+                    await HandelNotFoundEndPointAsync(httpContext);
             }
             catch (Exception ex)
             {
@@ -30,6 +33,18 @@ namespace E_Commerce.API.Middlewares
             }
 
            
+        }
+
+        private async Task HandelNotFoundEndPointAsync(HttpContext httpContext)
+        {
+            httpContext.Response.ContentType = "application/json";
+            var response = new ErrorDetails
+                {
+                  StatusCode = (int)HttpStatusCode.NotFound,
+                  ErrorMessage = $"The EndPoint {httpContext.Request.Path} is not responding."
+            }.ToString();
+
+            await httpContext.Response.WriteAsync(response);
         }
 
         private async Task HandelExceptionAsync(HttpContext httpContext, Exception ex)

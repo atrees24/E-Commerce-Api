@@ -1,5 +1,8 @@
 using Domain.Interfaces;
+using E_Commerce.API.Extentions;
+using E_Commerce.API.Factories;
 using E_Commerce.API.Middlewares;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 using Persistance.Data;
@@ -15,29 +18,20 @@ namespace E_Commerce.API
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            #region Services
             // Add services to the container.
-            builder.Services.AddControllers().AddApplicationPart(typeof(Presentation.AssimbleByReferance).Assembly);
-            builder.Services.AddScoped<IDBintilaizer, DBintilaizer>();
-            builder.Services.AddScoped<IUniteOfWork, UniteOfWork>();
-            builder.Services.AddScoped<IServiceManager, ServiceManager>();
-            builder.Services.AddAutoMapper(typeof(Services.AssempleReferance).Assembly);
-            builder.Services.AddDbContext<StoreContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQlConnection"));
-            });
+            builder.Services.AddCoreService();
+            builder.Services.AddInfrastrcutreService(builder.Configuration);
+            builder.Services.AddPresentationService();
 
-            // Register ConcurrentDictionary<string, object>
-            builder.Services.AddSingleton(new ConcurrentDictionary<string, object>());
+            #endregion
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            app.UseMiddleware<GlobalErrorHandelingMiddelware>();
-            await InitilaizeDB(app);
+            #region Middelwares
+            await app.SeedDBAsync();
+            app.UseCustomeExceptionMiddelware();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -55,12 +49,8 @@ namespace E_Commerce.API
 
             app.Run();
 
-            async Task InitilaizeDB(WebApplication app)
-            {
-                using var scope = app.Services.CreateScope();
-                var dbinitlizer = scope.ServiceProvider.GetRequiredService<IDBintilaizer>();
-                await dbinitlizer.Initilaize();
-            }
+           
+            #endregion
         }
     }
 }
