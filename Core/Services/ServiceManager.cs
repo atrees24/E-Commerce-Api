@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Interfaces;
+using Domain.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Service.Abstraction;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +17,23 @@ namespace Services
     {
         private readonly Lazy<IProductService> _productService;
         private readonly Lazy<IBasketService> _basketService;
-        public ServiceManager(IUniteOfWork UniteOfWork , IMapper Mapper , IBasketRepository basketRepository)
+        private readonly Lazy<IAuthentactionService> _authentactionService;
+        public ServiceManager(IUniteOfWork UniteOfWork, IMapper Mapper, IBasketRepository basketRepository,
+            UserManager<User> userManager, IOptions<JwtOptions> options)
         {
-            _productService = new Lazy<IProductService>(() => new ProductService(UniteOfWork, Mapper));
-            _basketService = new Lazy<IBasketService>(() => new BasketService(basketRepository, Mapper));
+            _productService = new Lazy<IProductService>(
+                () => new ProductService(UniteOfWork, Mapper));
+            _basketService = new Lazy<IBasketService>(
+                () => new BasketService(basketRepository, Mapper));
+            _authentactionService = new Lazy<IAuthentactionService>(
+                () => new AuthentactionService(userManager, options)
+             );
         }
 
         public IProductService ProductService => _productService.Value;
 
         public IBasketService basketService => _basketService.Value;
+
+        public IAuthentactionService athentcationService => _authentactionService.Value;
     }
 }

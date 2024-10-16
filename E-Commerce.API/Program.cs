@@ -20,7 +20,7 @@ namespace E_Commerce.API
             var builder = WebApplication.CreateBuilder(args);
             #region Services
             // Add services to the container.
-            builder.Services.AddCoreService();
+            builder.Services.AddCoreService(builder.Configuration);
             builder.Services.AddInfrastrcutreService(builder.Configuration);
             builder.Services.AddPresentationService();
 
@@ -43,6 +43,7 @@ namespace E_Commerce.API
             app.UseStaticFiles();
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

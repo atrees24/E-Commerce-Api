@@ -11,6 +11,7 @@ namespace E_Commerce.API.Extentions
             using var scope = app.Services.CreateScope();
             var dbinitlizer = scope.ServiceProvider.GetRequiredService<IDBintilaizer>();
             await dbinitlizer.Initilaize();
+            await dbinitlizer.InitilaizeIdentityAsync();
 
             return app;
         }

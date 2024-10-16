@@ -52,23 +52,30 @@ namespace E_Commerce.API.Middlewares
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             httpContext.Response.ContentType = "application/json";
 
+            var response = new ErrorDetails
+            {
+                
+                ErrorMessage = ex.Message
+            };
+
             httpContext.Response.StatusCode = ex switch
             {
                 NotFoundException => (int)HttpStatusCode.NotFound,
+                UnAthuraizedException => (int)HttpStatusCode.Unauthorized,
+                ValidationException validationException => HandelValidationExceptionAsync(validationException,response),
                 _ => (int)HttpStatusCode.InternalServerError
             };
 
-           var response = new ErrorDetails
-            {
-                StatusCode = (int)httpContext.Response.StatusCode,
-                ErrorMessage = ex.Message
-            }.ToString();
 
+            response.StatusCode = httpContext.Response.StatusCode;
 
-            await httpContext.Response.WriteAsync(response);
+            await httpContext.Response.WriteAsync(response.ToString());
         }
 
-
-
+        private int HandelValidationExceptionAsync(ValidationException validationException, ErrorDetails response)
+        {
+            response.Errors= validationException.Errors;
+            return (int)HttpStatusCode.BadRequest;
+        }
     }
 }

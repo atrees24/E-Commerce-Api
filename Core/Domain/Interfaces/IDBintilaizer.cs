@@ -9,5 +9,7 @@ namespace Domain.Interfaces
     public interface IDBintilaizer
     {
         public Task Initilaize();
+
+        public Task InitilaizeIdentityAsync();
     }
 }
