@@ -1,4 +1,5 @@
 ﻿
+using Domain.Models.OrderEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,10 @@ namespace Persistance.Data
         public DbSet<Product> products { get; set; }
         public DbSet<ProductBrand> ProductBrands { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
+        public DbSet<OrderEntity> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<DelveryMethod> DelveryMethods { get; set; }
+
 
     }
 }

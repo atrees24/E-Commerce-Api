@@ -1,4 +1,5 @@
 ﻿using Domain.Interfaces;
+using Domain.Models.OrderEntities;
 using Microsoft.AspNetCore.Identity;
 using Persistance.Data;
 using System;
@@ -68,6 +69,19 @@ namespace Persistance
                     if (product is not null && product.Any())
                     {
                         await _storeContext.products.AddRangeAsync(product);
+                        await _storeContext.SaveChangesAsync();
+                    }
+                }
+                if (!_storeContext.DelveryMethods.Any())
+                {
+                    var deliveryData = await File.
+                        ReadAllTextAsync(@"..\Infrastructure\Persistance\Data\Seeding\delivery.json");
+
+                    var delveryMethods = JsonSerializer.Deserialize<List<DelveryMethod>>(deliveryData);
+
+                    if (delveryMethods is not null && delveryMethods.Any())
+                    {
+                        await _storeContext.DelveryMethods.AddRangeAsync(delveryMethods);
                         await _storeContext.SaveChangesAsync();
                     }
                 }

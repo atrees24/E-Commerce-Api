@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿global using UserAddress = Domain.Models.Address;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace Persistance.Identity
 {
     public class StoreIdentityContext : IdentityDbContext
@@ -17,7 +12,7 @@ namespace Persistance.Identity
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Address>().ToTable("Addresses");
+            builder.Entity<UserAddress>().ToTable("Addresses");
         }
     }
 }
