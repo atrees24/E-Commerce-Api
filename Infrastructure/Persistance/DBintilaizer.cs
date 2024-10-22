@@ -72,19 +72,19 @@ namespace Persistance
                         await _storeContext.SaveChangesAsync();
                     }
                 }
-                if (!_storeContext.DelveryMethods.Any())
-                {
-                    var deliveryData = await File.
-                        ReadAllTextAsync(@"..\Infrastructure\Persistance\Data\Seeding\delivery.json");
+                //if (!_storeContext.DelveryMethods.Any())
+                //{
+                //    var deliveryData = await File.
+                //        ReadAllTextAsync(@"..\Infrastructure\Persistance\Data\Seeding\delivery.json");
 
-                    var delveryMethods = JsonSerializer.Deserialize<List<DelveryMethod>>(deliveryData);
+                //    var delveryMethods = JsonSerializer.Deserialize<List<DelveryMethod>>(deliveryData);
 
-                    if (delveryMethods is not null && delveryMethods.Any())
-                    {
-                        await _storeContext.DelveryMethods.AddRangeAsync(delveryMethods);
-                        await _storeContext.SaveChangesAsync();
-                    }
-                }
+                //    if (delveryMethods is not null && delveryMethods.Any())
+                //    {
+                //        await _storeContext.DelveryMethods.AddRangeAsync(delveryMethods);
+                //        await _storeContext.SaveChangesAsync();
+                //    }
+                //}
 
             }
             catch (Exception)

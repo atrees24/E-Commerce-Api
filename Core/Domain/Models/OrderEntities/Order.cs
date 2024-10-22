@@ -23,6 +23,7 @@
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public OrderPaymentStatus PaymentStatus { get; set; } = OrderPaymentStatus.Pending;
         public DelveryMethod DelveryMethod { get; set; }
+        public int? DelveryMethodId { get; set; }
         public decimal Subtotal { get; set; }
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.Now;
         public string PaymentIntentId { get; set; } = string.Empty;

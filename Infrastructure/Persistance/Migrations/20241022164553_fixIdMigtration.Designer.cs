@@ -12,8 +12,8 @@ using Persistance.Data;
 namespace Persistance.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20241018160232_OrderModel")]
-    partial class OrderModel
+    [Migration("20241022164553_fixIdMigtration")]
+    partial class fixIdMigtration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace Persistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("DelveryMethodId")
+                    b.Property<int?>("DelveryMethodId")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("OrderDate")
@@ -186,8 +186,7 @@ namespace Persistance.Migrations
                     b.HasOne("Domain.Models.OrderEntities.DelveryMethod", "DelveryMethod")
                         .WithMany()
                         .HasForeignKey("DelveryMethodId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.OwnsOne("Domain.Models.OrderEntities.Address", "ShippingAddress", b1 =>
                         {
